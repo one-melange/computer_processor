@@ -51,7 +51,7 @@ module ripple_carry_adder(a, b, c_in, s, c_out);
 	assign carries[0] = c_in;
 		
 	genvar i; 
-    generate 
+    	generate 
 		for (i=0; i<4; i=i+1) begin: rca_loop_1 
 			full_adder		rcadder(a[i], b[i], carries[i], s[i], carries[i+1]); 
 		end 
