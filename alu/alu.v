@@ -370,8 +370,8 @@ module alu(data_operandA, data_operandB, ctrl_ALUopcode, ctrl_shiftamt, data_res
    subtractor_csel					alu_subtract(data_operandA, data_operandB, results[1], cdif_out);
    bitwise_and						alu_and(data_operandA, data_operandB, results[2]);
    bitwise_or						alu_or(data_operandA, data_operandB, results[3]);
-   logical_left_shift						left_shift_l(data_operandA, ctrl_shiftamt, 0, results[4]);
-   arithmetic_right_shift					right_shift_a(data_operandA, ctrl_shiftamt, data_operandA[31], results[5]);
+   logical_left_shift				left_shift_l(data_operandA, ctrl_shiftamt, 0, results[4]);
+   arithmetic_right_shift			right_shift_a(data_operandA, ctrl_shiftamt, data_operandA[31], results[5]);
    equal_or_less					quick_compare(results[1], equal, less);
    
    tsb			buffer_add(results[0], decoded_op[0], data_result);
