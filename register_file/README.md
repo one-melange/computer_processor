@@ -1,0 +1,1 @@
+This register file has 32 registers. The registers are composed of d flip flops with asynchronous resets. Thus, an asserted reset will set the output low immediately instead of setting the output low on the subsequent cycle.

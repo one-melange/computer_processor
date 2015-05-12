@@ -125,7 +125,7 @@ module register(in, enable, clock, reset, out);
    genvar i; 
    generate 
 	for (i=0; i<32; i=i+1) begin: dff_loop_32 
-		dff_sr  async_dff(in[i], enable, clock, reset, out[i]); 
+		dff_sr		async_dff(in[i], enable, clock, reset, out[i]); 
 	end 
    endgenerate
    
@@ -148,19 +148,19 @@ module register_file(clock, ctrl_writeEnable, ctrl_reset, ctrl_writeReg, ctrl_re
    wire [31:0] decoded_tsb_setB;
    
    // write decoder
-   write_decoder write_decoder(ctrl_writeReg, ctrl_writeEnable, decoded_writeReg); 
+   write_decoder		write_decoder(ctrl_writeReg, ctrl_writeEnable, decoded_writeReg); 
    
    // read decoders
-   read_decoder read_decoderA(ctrl_readRegA, decoded_tsb_setA);
-   read_decoder read_decoderB(ctrl_readRegB, decoded_tsb_setB);
+   read_decoder 		read_decoderA(ctrl_readRegA, decoded_tsb_setA);
+   read_decoder 		read_decoderB(ctrl_readRegB, decoded_tsb_setB);
    
    // 32 registers and 64 tri-state-buffers in sets of 32, with register outputs fed into tsbs
    genvar a;
    generate
 	for (a=0; a<32; a=a+1) begin: register_loop_32
-		register register(data_writeReg, decoded_writeReg[a], clock, ctrl_reset, wire_array[a]);
-		tsb      tri_stateA(wire_array[a], decoded_tsb_setA[a], data_readRegA);
-		tsb      tri_stateB(wire_array[a], decoded_tsb_setB[a], data_readRegB);
+		register 	register(data_writeReg, decoded_writeReg[a], clock, ctrl_reset, wire_array[a]);
+		tsb      	tri_stateA(wire_array[a], decoded_tsb_setA[a], data_readRegA);
+		tsb      	tri_stateB(wire_array[a], decoded_tsb_setB[a], data_readRegB);
 	end
    endgenerate
    
