@@ -164,4 +164,4 @@ module register_file(clock, ctrl_writeEnable, ctrl_reset, ctrl_writeReg, ctrl_re
 	end
    endgenerate
    
-endmodule 
+endmodule
