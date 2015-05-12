@@ -5,8 +5,8 @@ module subtractor_csel(a, b, diff_out, carry_out);
 	wire [31:0] not_b, diff_out;
 	wire carry_out;
 	
-	bitwise_not 	negate_b(b, not_b);
-	adder_csel 		subtraction(a, not_b, 1, diff_out, carry_out);
+	bitwise_not		negate_b(b, not_b);
+	adder_csel		subtraction(a, not_b, 1, diff_out, carry_out);
 	
 endmodule //end 32-bit subtraction
 
@@ -19,19 +19,19 @@ module adder_csel(a, b, carry_in, sum_out, carry_out);
 	wire [21:0] carries;
 	wire carry_out;
 	
-	ripple_carry_adder 		rca_0(a[3:0], b[3:0], carry_in, sum_out[3:0], carries[0]);
+	ripple_carry_adder		rca_0(a[3:0], b[3:0], carry_in, sum_out[3:0], carries[0]);
 
 	genvar i, j;
 	generate
 		for (i=1; i<8; i=i+1) begin: carry_select_block_loop
-			ripple_carry_adder 		rca_1(a[((4*i)+3):(4*i)], b[((4*i)+3):(4*i)], 0, temp_out_0[((4*i)+3):(4*i)], carries[(3*i)-2]);
-			ripple_carry_adder 		rca_2(a[((4*i)+3):(4*i)], b[((4*i)+3):(4*i)], 1, temp_out_1[((4*i)+3):(4*i)], carries[(3*i)-1]);
+			ripple_carry_adder		rca_1(a[((4*i)+3):(4*i)], b[((4*i)+3):(4*i)], 0, temp_out_0[((4*i)+3):(4*i)], carries[(3*i)-2]);
+			ripple_carry_adder		rca_2(a[((4*i)+3):(4*i)], b[((4*i)+3):(4*i)], 1, temp_out_1[((4*i)+3):(4*i)], carries[(3*i)-1]);
 			
 			for (j=(4*i); j<((4*i)+4); j=j+1) begin: sum_mux_loop
-				mux2_1 		sum_mux(temp_out_0[j], temp_out_1[j], carries[(3*i)-3], sum_out[j]);
+				mux2_1		sum_mux(temp_out_0[j], temp_out_1[j], carries[(3*i)-3], sum_out[j]);
 			end
 			
-			mux2_1 		carry_mux(carries[(3*i)-2], carries[(3*i)-1], carries[(3*i)-3], carries[(3*i)]);
+			mux2_1		carry_mux(carries[(3*i)-2], carries[(3*i)-1], carries[(3*i)-3], carries[(3*i)]);
 		end
 	endgenerate
 	
@@ -53,7 +53,7 @@ module ripple_carry_adder(a, b, c_in, s, c_out);
 	genvar i; 
     generate 
 		for (i=0; i<4; i=i+1) begin: rca_loop_1 
-			full_adder  	rcadder(a[i], b[i], carries[i], s[i], carries[i+1]); 
+			full_adder		rcadder(a[i], b[i], carries[i], s[i], carries[i+1]); 
 		end 
 	endgenerate
 
@@ -97,9 +97,9 @@ module arithmetic_right_shift(a, shift, lsb, out);
 	output [31:0] out;
 	wire [31:0] out, pre_shift, post_shift;
 	
-	bit_reversal 			reverse_0(a, pre_shift);
+	bit_reversal			reverse_0(a, pre_shift);
 	logical_left_shift		shifter(pre_shift, shift, lsb, post_shift);
-	bit_reversal 			reverse_1(post_shift, out);
+	bit_reversal			reverse_1(post_shift, out);
 	
 endmodule //end 32-bit arithmetic right shift
 	
@@ -320,9 +320,9 @@ module equal_or_less(in, equal, less);
    wire equal, less;
    
    or(equal, in[31], in[30], in[29], in[28], in[27], in[26], in[25], in[24],
-			 in[23], in[22], in[21], in[20], in[19], in[18], in[17], in[16],
-			 in[15], in[14], in[13], in[12], in[11], in[10], in[9] , in[8] ,
-			 in[7] , in[6] , in[5] , in[4] , in[3] , in[2] , in[1] , in[0]);
+			in[23], in[22], in[21], in[20], in[19], in[18], in[17], in[16],
+			in[15], in[14], in[13], in[12], in[11], in[10], in[9] , in[8] ,
+			in[7] , in[6] , in[5] , in[4] , in[3] , in[2] , in[1] , in[0]);
 				   
    assign less = in[31];
    
@@ -364,23 +364,23 @@ module alu(data_operandA, data_operandB, ctrl_ALUopcode, ctrl_shiftamt, data_res
    wire [31:0] results [5:0];
    wire equal, less;
    
-   opcode_decoder 	   				alu_decoder(ctrl_ALUopcode, decoded_op);
+   opcode_decoder					alu_decoder(ctrl_ALUopcode, decoded_op);
    
-   adder_csel  						alu_adder(data_operandA, data_operandB, 0, results[0], csum_out);
-   subtractor_csel     				alu_subtract(data_operandA, data_operandB, results[1], cdif_out);
-   bitwise_and 		   				alu_and(data_operandA, data_operandB, results[2]);
-   bitwise_or  		   				alu_or(data_operandA, data_operandB, results[3]);
-   logical_left_shift         		left_shift_l(data_operandA, ctrl_shiftamt, 0, results[4]);
-   arithmetic_right_shift 	       	right_shift_a(data_operandA, ctrl_shiftamt, data_operandA[31], results[5]);
-   equal_or_less				   	quick_compare(results[1], equal, less);
+   adder_csel						alu_adder(data_operandA, data_operandB, 0, results[0], csum_out);
+   subtractor_csel					alu_subtract(data_operandA, data_operandB, results[1], cdif_out);
+   bitwise_and						alu_and(data_operandA, data_operandB, results[2]);
+   bitwise_or						alu_or(data_operandA, data_operandB, results[3]);
+   logical_left_shift				left_shift_l(data_operandA, ctrl_shiftamt, 0, results[4]);
+   arithmetic_right_shift			right_shift_a(data_operandA, ctrl_shiftamt, data_operandA[31], results[5]);
+   equal_or_less					quick_compare(results[1], equal, less);
    
-   tsb			   buffer_add(results[0], decoded_op[0], data_result);
-   tsb			   buffer_sub(results[1], decoded_op[1], data_result);
-   tsb			   buffer_and(results[2], decoded_op[2], data_result);
-   tsb			   buffer_or (results[3], decoded_op[3], data_result);
-   tsb			   buffer_sll(results[4], decoded_op[4], data_result);
-   tsb			   buffer_sra(results[5], decoded_op[5], data_result);
-   tsb_1bit		   buffer_equal(equal, decoded_op[1], isNotEqual);
-   tsb_1bit		   buffer_less (less , decoded_op[1], isLessThan);
+   tsb			buffer_add(results[0], decoded_op[0], data_result);
+   tsb			buffer_sub(results[1], decoded_op[1], data_result);
+   tsb			buffer_and(results[2], decoded_op[2], data_result);
+   tsb			buffer_or (results[3], decoded_op[3], data_result);
+   tsb			buffer_sll(results[4], decoded_op[4], data_result);
+   tsb			buffer_sra(results[5], decoded_op[5], data_result);
+   tsb_1bit		buffer_equal(equal, decoded_op[1], isNotEqual);
+   tsb_1bit		buffer_less (less , decoded_op[1], isLessThan);
 
 endmodule
